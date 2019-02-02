@@ -207,10 +207,17 @@ def initAleaMaster(n):
 	return final
 
 #print(initAleaMaster(13))
+import math
 import time
 import matplotlib.pyplot as plt
 
-def measureExecTime(a, b, c):
+def graph(x, y, labelX, labelY):
+		plt.plot(x, y)
+		plt.ylabel(labelY)
+		plt.xlabel(labelX)
+		plt.show()
+
+def measureExecTime(a, b, c, show=True):
 	temps = []
 	valeurs = []
 	for i in range(a, b, c):
@@ -219,10 +226,18 @@ def measureExecTime(a, b, c):
 		end = time.time()
 		temps.append(end-start)
 		valeurs.append(i)
-	plt.plot(valeurs, temps)
-	plt.ylabel('times')
-	plt.xlabel('values')
-	plt.show()
+	if(show):
+		graph(valeurs, temps, 'values', 'times')
 	return (valeurs, temps)
 
-measureExecTime(200, 2000, 200)
+def logLog(xY, show=True):
+	x, y = xY
+	logX = []
+	logY = []
+	for i in range(len(x)):
+		logX.append(math.log(x[i]))
+		logY.append(math.log(y[i]))
+	if(show):
+		graph(logX, logY,'log(values)', 'log(times)')
+
+logLog(measureExecTime(200, 2000, 200))
