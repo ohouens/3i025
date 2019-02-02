@@ -206,4 +206,23 @@ def initAleaMaster(n):
 		i = i+1
 	return final
 
-print(initAleaMaster(13))
+#print(initAleaMaster(13))
+import time
+import matplotlib.pyplot as plt
+
+def measureExecTime(a, b, c):
+	temps = []
+	valeurs = []
+	for i in range(a, b, c):
+		start = time.time()
+		initAleaMaster(i)
+		end = time.time()
+		temps.append(end-start)
+		valeurs.append(i)
+	plt.plot(valeurs, temps)
+	plt.ylabel('times')
+	plt.xlabel('values')
+	plt.show()
+	return (valeurs, temps)
+
+measureExecTime(200, 2000, 200)
