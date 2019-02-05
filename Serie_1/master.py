@@ -240,4 +240,24 @@ def logLog(xY, show=True):
 	if(show):
 		graph(logX, logY,'log(values)', 'log(times)')
 
-logLog(measureExecTime(200, 2000, 200))
+#logLog(measureExecTime(200, 2000, 200))
+
+def plne(etudiants, masters, k):
+	#print(etudiants)
+	#print(masters)
+	economique = []
+	variable = []
+	contrainte = []
+	for inter in etudiants:
+		admissibles = []
+		for y in range(0, k):
+			currentMaster = inter[2][y]
+			if(not(currentMaster in economique)):
+				economique.append(currentMaster)
+			admissibles.append(currentMaster)
+		variable.append((inter[0], admissibles))
+	return((economique, variable, contrainte))
+
+
+
+plne(initAleaEtu(5), initAleaMaster(5), 2)
