@@ -245,19 +245,32 @@ def logLog(xY, show=True):
 def plne(etudiants, masters, k):
 	#print(etudiants)
 	#print(masters)
+	fichier = "Maximise\n"
 	economique = []
-	variable = []
+	bounds = []
 	contrainte = []
-	for inter in etudiants:
-		admissibles = []
-		for y in range(0, k):
-			currentMaster = inter[2][y]
-			if(not(currentMaster in economique)):
-				economique.append(currentMaster)
-			admissibles.append(currentMaster)
-		variable.append((inter[0], admissibles))
-	return((economique, variable, contrainte))
-
-
-
-plne(initAleaEtu(5), initAleaMaster(5), 2)
+	for i in range(len(etudiants)):
+		subC = ""
+		taille = len(etudiants[i][2])
+		for y in range(len(etudiants[i][2])):
+			poids = 0
+			if(y < len(masters)):
+				if(i in masters[y][2] and y in etudiants[i][2] and y<=k):
+					poids = 1
+			name = 'x'+str(i+1)+'_'+str(y+1)
+			economique.append(str(poids*(taille-y-1))+' '+name)
+			subC = subC+" + "+name
+			bounds.append((str(0)+" <= "+name+" <= "+str(1)))
+		contrainte.append("c"+str(i)+":"+subC+" = 1")
+	fichier = fichier+"obj:"
+	for e in economique:
+		fichier = fichier +" + "+e
+	fichier = fichier+"\nSubject To\n"
+	for c in contrainte:
+		fichier = fichier+c+"\n"
+	fichier = fichier+"Bounds\n"
+	for b in bounds:
+		fichier = fichier+b+"\n"
+	fichier = fichier+"Binary\n0 1\nEnd"
+	return fichier
+print(plne(initAleaEtu(5), initAleaMaster(5), 4))
