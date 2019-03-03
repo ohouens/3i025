@@ -29,7 +29,6 @@ class PriorityQueue():
     def __init__(self, world):
         self.goal, self.wall = world
         self.frontier = []
-        self.numF = 0
 
     def put(self, position, cost):
         self.frontier.append((position, cost))
@@ -38,21 +37,32 @@ class PriorityQueue():
         return len(self.frontier) == 0
 
     def get(self):
-        return self.frontier[-1]
+        result = self.frontier[0]
+        for t in self.frontier:
+            if(t[1] != 0 and t[1] < result[1]):
+                result = t
+        pos, cos = result
+        self.frontier.remove(result)
+        return pos, cos
 
-    def heuristic(self, a, b):
-        xa, ya = a
-        xb, yb = b
-        return abs(xa-xb) + abs(ya-yb)
+    def clear(self):
+        self.frontier.clear()
 
-    def chemin(self, start, came_from):
-        final = []
-        current = start
-        while(came_from[current] != None):
-            final.append(current)
-            current = came_from[current]
+
+def heuristic(a, b):
+    xa, ya = a
+    xb, yb = b
+    return abs(xa-xb) + abs(ya-yb)
+
+def path(start, came_from):
+    final = []
+    if(start not in came_from):
         return final
-
+    current = start
+    while(current != None):
+        final.append(current)
+        current = came_from[current]
+    return final
 
 class Graph():
     def __init__(self, world):
@@ -168,15 +178,15 @@ def main():
             new_cost = cost_so_far[position] + graph.cost(position, nextP)
             if nextP not in cost_so_far or new_cost < cost_so_far[nextP]:
                 cost_so_far[nextP] = new_cost
-                priority = new_cost + frontier.heuristic(goal, nextP)
+                priority = new_cost + heuristic(goal, nextP)
                 frontier.put(nextP, priority)
                 came_from[nextP] = position
-                if(nextP == goal):
-                    chemin = frontier.chemin(nextP, came_from)
-                    print("\nchemin: "+str(chemin))
-                    print("**** Trouvé *****")
-                    #exit(0)
+                #player.set_rowcol(nextP[0],nextP[1])
+                #print ("pos 1:",nextP[0],nextP[1])
+                #game.mainiteration()
         i += 1
+
+    chemin = path(goal, came_from)
 
     for a in range(len(chemin)):
         nextP = chemin[y]
