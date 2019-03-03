@@ -165,14 +165,11 @@ def main():
         print("cost so far: "+str(cost_so_far))
         print("frontier: "+str(frontier.frontier))
 
-        current = frontier.get()
+        position, cout = frontier.get()
 
-        if(current == goal):
+        if(position == goal):
             frontier.clear()
             break
-
-        position = current[0]
-        cout = current[1]
 
         for nextP in graph.neighbors(position):
             new_cost = cost_so_far[position] + graph.cost(position, nextP)
